@@ -1,0 +1,148 @@
+<div class="form-container">
+  <%= form_with model: @post do |form| %>
+    <div class="form-header">
+      <button id="form-cancel-button">キャンセル</button>
+      <span id="form-notice">位置情報を取得中...</span>
+      <button id="form-submit-button" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path d="M10 14l11 -11"></path>
+          <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="form-main">
+      <%= form.text_area :message, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
+      <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
+      <%= form.hidden_field :latitude, id: "form-latitude", value: "" %>
+    </div>
+  <% end %>
+</div>
+<script>
+  let coordsReady = false;
+  let isValidMsg = false;
+
+  const cancelButton = document.querySelector("#form-cancel-button");
+  cancelButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    window.history.back();
+  });
+
+  const submitButton = document.querySelector("#form-submit-button");
+  submitButton.disabled = true;
+  submitButton.value = ``
+
+  const noticeMsg = document.querySelector("#form-notice");
+
+  navigator.geolocation.getCurrentPosition((position) => {
+    document.querySelector("#form-longitude").value = position.coords.longitude;
+    document.querySelector("#form-latitude").value = position.coords.latitude;
+
+    submitButton.disabled = false;
+    noticeMsg.innerHTML = "";
+
+    coordsReady = true;
+
+    if (isValidMsg) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  });
+
+  const msgInput = document.querySelector("#form-message");
+  msgInput.addEventListener("input", (e) => {
+    const msg = e.target.value;
+    if (msg.length > 0) {
+      isValidMsg = true;
+    } else {
+      isValidMsg = false;
+    }
+    if (isValidMsg && coordsReady) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  });
+</script>
+<style>
+  .form-container {
+    padding: 16px;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+  .form-container > form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+  }
+  .form-header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: end;
+  }
+  #form-cancel-button {
+    cursor: pointer;
+    margin-right: auto;
+    border: none;
+    background: none;
+    padding: 8px;
+    border-radius: 12px;
+  }
+  #form-cancel-button:hover {
+    text-decoration: underline;
+  }
+  #form-notice {
+    font-size: 12px;
+    color: gray;
+    animation: loading-anm 1s infinite;
+  }
+  #form-submit-button {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-content: center;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+  }
+  #form-submit-button[disabled] {
+    background: var(--primary-dark);
+    color: #dedede;
+  }
+  #form-submit-button svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .form-main{
+    display: flex;
+    height: 100%;
+  }
+  #form-message {
+    padding: 0px;
+    resize: none;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    flex-grow: 1;
+    border: none !important;
+    outline: none !important;
+  }
+
+  @keyframes loading-anm {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+</style>
