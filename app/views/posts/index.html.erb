@@ -1,0 +1,8 @@
+<script> 
+  navigator.geolocation.getCurrentPosition((pos) => {
+    latitude = pos.coords.latitude;
+    longitude = pos.coords.longitude;
+
+    console.log(latitude, longitude);
+  });
+</script>
