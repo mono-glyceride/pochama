@@ -1,3 +1,4 @@
+<%= render "shared/header" %>
 <div class="form-container">
   <%= form_with model: @post do |form| %>
     <div class="form-header">
@@ -18,21 +19,22 @@
     </div>
   <% end %>
 </div>
+<%= render "shared/navbar" %>
 <script>
-  let coordsReady = false;
-  let isValidMsg = false;
+  var coordsReady = false;
+  var isValidMsg = false;
 
-  const cancelButton = document.querySelector("#form-cancel-button");
+  var cancelButton = document.querySelector("#form-cancel-button");
   cancelButton.addEventListener("click", (e) => {
     e.preventDefault();
     window.history.back();
   });
 
-  const submitButton = document.querySelector("#form-submit-button");
+  var submitButton = document.querySelector("#form-submit-button");
   submitButton.disabled = true;
   submitButton.value = ``
 
-  const noticeMsg = document.querySelector("#form-notice");
+  var noticeMsg = document.querySelector("#form-notice");
 
   navigator.geolocation.getCurrentPosition((position) => {
     document.querySelector("#form-longitude").value = position.coords.longitude;
@@ -50,9 +52,9 @@
     }
   });
 
-  const msgInput = document.querySelector("#form-message");
+  var msgInput = document.querySelector("#form-message");
   msgInput.addEventListener("input", (e) => {
-    const msg = e.target.value;
+    var msg = e.target.value;
     if (msg.length > 0) {
       isValidMsg = true;
     } else {
