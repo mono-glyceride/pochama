@@ -18,6 +18,9 @@ class PostsController < ApplicationController
     end
   end
 
+  def map
+  end
+
   private
     def posts_paramas
 
