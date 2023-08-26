@@ -11,3 +11,5 @@ RUN bundle update --bundler
 
 RUN bundle install
 ADD . /myapp
+
+CMD ["rails", "server", "-b", "0.0.0.0"]
