@@ -35,7 +35,7 @@
   if(flashCloseButton.length > 0){
     flashCloseButton.forEach((btn) => {
       btn.addEventListener("click", function() {
-        var flashItem = flashCloseButton.closest(".flash-item");
+        var flashItem = btn.closest(".flash-item");
         flashItem.style.display = "none";
       });
     })
