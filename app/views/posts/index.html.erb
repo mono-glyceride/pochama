@@ -1,14 +1,14 @@
 <%= render "shared/header" %>
 <div class="timeline">
-  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-    <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="#ffcc99"></path>
-  </svg>
-  <p style="position: absolute; top: 50px; left: 100; font-size: 20px; color: #ffcc99 ;">今居るところの投稿</p>
-  <p style="position: absolute; top: 20px; left: 40px; font-size: 15px; color: #ffcc99 ;">東京都 港区 (北緯35.４度 東経139.7度)
-  </p>
+  <div class="timeline-address-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
+    </svg>
+    <p>東京都 港区 (北緯35.４度 東経139.7度)</p>
+  </div>
+  <p>今居るところの投稿</p>
   <div id="post-list">
-    <div class="post-list-notice">周辺の投稿を探しています...!</div>
   </div>
 </div>
 <%= render "shared/new_post_button" %>
@@ -24,15 +24,22 @@
         longitude: position.coords.longitude,
       }
     }).then((res)=>{
+      console.log(res.data);
+      listContainer.innerHTML = "";
       res.data.forEach(function(post) {
         var postElement = document.createElement("div")
         postElement.classList.add("post-item")
         postElement.innerHTML = `
+          <div class="post-item-header">
+            <div class="post-content-date">
+              ${new Date(post.created_at).toLocaleString()}
+            </div>
+            <div class="post-content-coords">
+              (${post.latitude}, ${post.longitude})
+            </div>
+          </div>
           <div class="post-content-text">
             ${post.content}
-          </div>
-          <div class="post-content-coords">
-            ${post.latitude}, ${post.longitude}
           </div>
         `
         listContainer.appendChild(postElement)
@@ -44,17 +51,46 @@
   });
 </script>
 <style>
-  .post-list {
-    padding: 16px;
+  .timeline-address-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--primary);
+  }
+  #post-list {
+    background: #f4f4f4;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 2px;
   }
   .post-list-notice {
     padding: 120px 0;
     text-align: center;
     font-size: 14px;
     color: gray;
+  }
+  .post-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 28px 24px;
+    background-color: white;
+  }
+  .post-item-header {
+    display: flex;
+    gap: 8px;
+  }
+  .post-content-date {
+    font-size: 14px;
+    color: gray;
+  }
+  .post-content-coords {
+    font-size: 14px;
+    color: gray;
+  }
+  .post-content-text {
+    font-size: 1rem;
+    line-height: 1.2;
   }
 </style>
 <link rel="stylesheet"  href="styles.css">
