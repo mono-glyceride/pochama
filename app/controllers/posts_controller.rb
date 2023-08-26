@@ -8,7 +8,7 @@ class PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(posts_paramas)
+    @post = Post.new(posts_params)
     if @post.save
       flash[:success] = '投稿しました'
       redirect_to posts_path
@@ -18,12 +18,19 @@ class PostsController < ApplicationController
     end
   end
 
+  def search
+    current_lat = posts_params[:latitude]
+    current_lng = posts_params[:longitude]
+    @posts = Posts.where( latitude:current_lat-0.009..current_lat+0.009, longitude:current_lng-0.009..current_lng+0.009 )
+    format.json {render json: @posts }
+  end
+
   def map
   end
 
   private
-    def posts_paramas
 
+    def posts_params
       params.require(:post).permit(:content, :latitude, :longitude)
     end
 
