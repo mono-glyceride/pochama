@@ -1,0 +1,107 @@
+<%= render "shared/header" %>
+<div id="map-notice">マップを読み込んでいます...</div>
+<div id="map"></div>
+<%= render "shared/new_post_button" %>
+<%= render "shared/navbar" %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_API_KEY'] %>&callback=initMap"
+  async
+  defer
+></script>
+<script>
+  var mapNotice =  document.querySelector("#map-notice");
+
+  async function initMap() {
+    let map;
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+      let latLng = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
+      }
+
+      map = new google.maps.Map(document.querySelector("#map"), {
+        center: latLng,
+        zoom: 15
+      })
+
+
+      // get posts
+      axios.get(`/posts/search`,{
+        params: {
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+        }
+      }).then((res)=>{
+        console.log(res.data);
+
+        // draw markers
+        res.data.forEach((post) => {
+          let markerLatLng = {
+            lat: post.latitude,
+            lng: post.longitude
+          }
+
+          // marker
+          let marker = new google.maps.Marker({
+            position: markerLatLng,
+            map,
+            title: post.content,
+            label: {
+              text: post.content.slice(0, 1),
+              color: "#fff"
+            }
+          })
+          // info window
+          let infoWindow = new google.maps.InfoWindow({
+            position: markerLatLng,
+            content: `
+            <div class="infowin-content">${post.content}</div>
+            <div class="infowin-date">${new Date(post.created_at).toDateString()}</div>
+            `
+          })
+
+          infoWindow.open(map, marker);
+
+          marker.addListener("click", () => {
+            infoWindow.open(map, marker);
+          })
+        })
+      }).catch((err)=>{
+        console.log(err)
+      });
+
+      new google.maps.Marker({
+        position: latLng,
+        map,
+        title: "You",
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: "blue",
+          fillOpacity: 1,
+          // anchor: new google.maps.Point(100, 100),
+          strokeWeight: 3,
+          strokeColor: "white",
+          scale: 1.2,
+        },
+      })
+
+      mapNotice.innerHTML = "";
+
+    });
+  }
+</script>
+<style>
+  #map {
+    width: 100%;
+    height: calc(100vh - 40px - 73px);
+  }
+  .infowin-content {
+    font-size: 14px;
+  }
+  .infowin-date {
+    color: gray;
+    font-size: 12px;
+  }
+</style>
