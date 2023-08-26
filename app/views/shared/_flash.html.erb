@@ -1,7 +1,7 @@
 <% flash.each do |message_type, message| %>
   <div class='flash-item alert alert-<%= message_type %>'>
     <%= message %>
-    <svg id="flash-close-button" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <svg class="flash-close-button" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
       <path d="M18 6l-12 12"></path>
       <path d="M6 6l12 12"></path>
@@ -30,9 +30,14 @@
   }
 </style>
 <script>
-  var flashCloseButton = document.querySelector("#flash-close-button");
-  flashCloseButton.addEventListener("click", function() {
-    var flashItem = flashCloseButton.closest(".flash-item");
-    flashItem.style.display = "none";
-  });
+  var flashCloseButton = document.querySelectorAll(".flash-close-button");
+
+  if(flashCloseButton.length > 0){
+    flashCloseButton.forEach((btn) => {
+      btn.addEventListener("click", function() {
+        var flashItem = flashCloseButton.closest(".flash-item");
+        flashItem.style.display = "none";
+      });
+    })
+  }
 </script>
