@@ -2,6 +2,12 @@
 
 one:
   content: MyText
+  latitude: 23.33
+  longitude: 33.45
+  #emoji: "😂"
 
 two:
   content: MyText
+  latitude: 23.33
+  longitude: 33.45
+  #emoji: "😊"
