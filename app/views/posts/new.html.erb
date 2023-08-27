@@ -27,6 +27,7 @@
           京都市・中京区
         </div>
         <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
+        <%= form.file_field :img_file_name %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
@@ -89,18 +90,6 @@
       submitButton.disabled = true;
     }
   });
-  <script>
-  document.getElementById('upload-icon').addEventListener('click', function() {
-    document.getElementById('file-input').click();
-  });
-
-  document.getElementById('file-input').addEventListener('change', function() {
-
-    var selectedFile = this.files[0];
-    console.log('選択されたファイル: ', selectedFile);
-  });
-</script>
-
 </script>
 <style>
   .form-container {
