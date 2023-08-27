@@ -41,22 +41,22 @@
   emoji.innerHTML = randEmo;
   document.querySelector("#form-hidden-emoji").value = randEmo;
 
-  var emojiPicker = document.querySelector("#emoji-picker");
   emoji.addEventListener("click", (e) => {
+    var emojiPicker = document.querySelector("#emoji-picker");
     emojiPicker.classList.toggle("show");
-  });
 
-  var picker = picmo.createPicker({rootElement : emojiPicker });
-  picker.addEventListener("emoji:select", (e) => {
-    emoji.innerHTML = e.emoji;
-    document.querySelector("#form-hidden-emoji").value = e.emoji;
-  })
+    var picker = picmo.createPicker({rootElement : emojiPicker });
+    picker.addEventListener("emoji:select", (e) => {
+      emoji.innerHTML = e.emoji;
+      document.querySelector("#form-hidden-emoji").value = e.emoji;
+    })
+  });
 
   document.body.addEventListener("click", (e)=>{
     if(e.target.closest("#emoji-picker") || e.target.closest("#form-emoji")){
       return;
     }
-    emojiPicker.classList.remove("show");
+    document.querySelector("#emoji-picker").classList.remove("show");
   })
 
   var coordsReady = false;
