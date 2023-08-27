@@ -26,7 +26,7 @@
           京都市・中京区
         </div>
         <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
-        <%= form.file_field :image %>
+        <%= form.file_field :img %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
@@ -42,7 +42,7 @@
    <path d="M19 16v6"></path>
    <path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
 </svg>
-  </label>  
+  </label>
 </div>
 <script src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
 <script>
@@ -266,5 +266,5 @@
     color: #ffcc99;
     padding: 10px 20px;
     border-radius: 5px;
-  }  
+  }
 </style>
