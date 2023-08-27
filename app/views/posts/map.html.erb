@@ -49,16 +49,20 @@
             map,
             title: post.content,
             label: {
-              text: post.content.slice(0, 1),
-              color: "#fff"
+              text: "😊",
+              fontSize: "24px",
             }
           })
           // info window
           let infoWindow = new google.maps.InfoWindow({
             position: markerLatLng,
             content: `
-            <div class="infowin-content">${post.content}</div>
-            <div class="infowin-date">${new Date(post.created_at).toDateString()}</div>
+            <div class="infowin-content">
+              ${post.content}
+            </div>
+            <div class="infowin-date">
+              ${new Date(post.created_at).toDateString()}
+            </div>
             `
           })
 
