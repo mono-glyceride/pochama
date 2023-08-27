@@ -40,15 +40,17 @@
               <div class="post-content-date">
                 ${new Date(post.created_at).toLocaleString()}
               </div>
-              <div class="post-content-coords">
-                (${post.latitude}, ${post.longitude})
-              </div>
             </div>
             <div class="post-content-text">
               ${post.content}
             </div>
             <div onClick="viewImage('post-image-${i}')" class="post-image-container">
               <img id="post-image-${i}" class="post-content-image" src="https://picsum.photos/300/200" alt="image1" loading="lazy">
+            </div>
+            <div class="post-content-coords">
+              <a href="/posts/map?lat=${post.latitude}&lng=${post.longitude}" target="_blank">
+                (${post.latitude}, ${post.longitude})
+              </a>
             </div>
           </div>
         `
@@ -109,10 +111,11 @@
     border-top: 1px solid #efefef;
   }
   .post-content-emoji {
-    font-size: 28px;
+    font-size: 32px;
   }
   .post-item-rhs {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     gap: 12px
   }
@@ -121,10 +124,6 @@
     gap: 8px;
   }
   .post-content-date {
-    font-size: 12px;
-    color: gray;
-  }
-  .post-content-coords {
     font-size: 12px;
     color: gray;
   }
@@ -137,12 +136,19 @@
     max-height: 152px;
     box-sizing: border-box;
     display: flex;
+    cursor: pointer;
   }
   .post-content-image {
     object-fit: contain;
     border-radius: 8px;
     max-height: 100%;
     max-width: 100%;
+  }
+  .post-content-coords {
+    width: 100%;
+    font-size: 12px;
+    color: gray;
+    text-align: right;
   }
 
   @keyframes fadein-l2r {
