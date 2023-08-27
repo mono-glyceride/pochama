@@ -1,9 +1,7 @@
 class ApplicationController < ActionController::Base
   
-  unless Rails.env.development?
-    rescue_from ActiveRecord::RecordNotFound,   with: :render_404
-    rescue_from ActionController::RoutingError, with: :render_404
-  end
+  rescue_from ActiveRecord::RecordNotFound,   with: :render_404
+  rescue_from ActionController::RoutingError, with: :render_404
 
   def routing_error
     raise ActionController::RoutingError, params[:path]
