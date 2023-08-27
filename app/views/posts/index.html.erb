@@ -13,6 +13,7 @@
 </div>
 <%= render "shared/new_post_button" %>
 <%= render "shared/navbar" %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.5/viewer.min.js" integrity="sha512-RiULFIt4KC3x9TYgFfcbkYLtn0DHffAZ5S7hVxjLpdC3i0/hNt6zYSTomh4kH8u8Ue70n2HFeP4n0ehHUSH4bg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
   var listContainer = document.querySelector("#post-list");
@@ -46,8 +47,8 @@
             <div class="post-content-text">
               ${post.content}
             </div>
-            <div class="post-image-container">
-              <img class="post-content-image" src="https://picsum.photos/300/200" alt="image1" loading="lazy">
+            <div onClick="viewImage('post-image-${i}')" class="post-image-container">
+              <img id="post-image-${i}" class="post-content-image" src="https://picsum.photos/300/200" alt="image1" loading="lazy">
             </div>
           </div>
         `
@@ -58,6 +59,16 @@
       listContainer.innerHTML = `<div class="post-list-notice">周辺の投稿を取得できませんでした T_T</div>`
     });
   });
+
+  function viewImage(id) {
+    console.log(id);
+    var viewer = new Viewer(document.getElementById(id), {
+      inline: false,
+      viewed() {
+        viewer.zoomTo(1)
+      }
+    });
+  }
 </script>
 <style>
 
@@ -145,3 +156,4 @@
     }
   }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.5/viewer.min.css" integrity="sha512-VysXDwG8m5Ngy43+b8+CdTe6Qkc69z8Oyxgo3yg8JqhRwwtjfSs+M4NEaP4As6l0ZCX+RpTyyuSiJnnO8JS5Eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
