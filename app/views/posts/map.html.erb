@@ -12,88 +12,96 @@
 <script>
   var mapNotice =  document.querySelector("#map-notice");
 
-  async function initMap() {
-    let map;
+  let map;
 
-    navigator.geolocation.getCurrentPosition((pos) => {
-      let latLng = {
+  function drawMap(currentLatLng, focusItem){
+    map = new google.maps.Map(document.querySelector("#map"), {
+      center: focusItem ? focusItem.latLng : currentLatLng,
+      zoom: focusItem ? 20 : 15,
+    })
+
+    // get posts
+    axios.get(`/posts/search`,{
+      params: {
+        latitude: focusItem ? focusItem.latLng.lat : currentLatLng.lat,
+        longitude: focusItem ? focusItem.latLng.lng : currentLatLng.lng,
+      }
+    }).then((res)=>{
+      console.log(res.data);
+
+      // draw markers
+      res.data.forEach((post) => {
+        let markerLatLng = {
+          lat: post.latitude,
+          lng: post.longitude
+        }
+
+        // marker
+        let marker = new google.maps.Marker({
+          position: markerLatLng,
+          map,
+          title: post.content,
+          label: {
+            text: "😊",
+            fontSize: "24px",
+          }
+        })
+
+        // info window
+        let infoWindow = new google.maps.InfoWindow({
+          position: markerLatLng,
+          content: `
+          <div class="infowin-content">
+            ${post.content}
+          </div>
+          <div class="infowin-date">
+            ${new Date(post.created_at).toDateString()}
+          </div>
+          `
+        })
+
+        if(!focusItem || (focusItem && post.id === focusItem.id)){
+          infoWindow.open(map, marker);
+        } 
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
+        })
+      })
+    }).catch((err)=>{
+      console.log(err)
+    });
+
+    new google.maps.Marker({
+      position: currentLatLng,
+      map,
+      title: "You",
+    })
+  }
+
+  async function initMap() {
+    let params = new URLSearchParams(window.location.search);
+
+    await navigator.geolocation.getCurrentPosition((pos) => {
+      let currentLatLng = {
         lat: pos.coords.latitude,
         lng: pos.coords.longitude
       }
+      let focusItem = null;
 
-      map = new google.maps.Map(document.querySelector("#map"), {
-        center: latLng,
-        zoom: 15
-      })
-
-
-      // get posts
-      axios.get(`/posts/search`,{
-        params: {
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
+      if (params.get("lat") !== null && params.get("lng") !== null) {
+        focusItem = {
+          latLng: {
+            lat: parseFloat(params.get("lat")),
+            lng: parseFloat(params.get("lng"))
+          },
+          id: parseInt(params.get("id"))
         }
-      }).then((res)=>{
-        console.log(res.data);
+      }
 
-        // draw markers
-        res.data.forEach((post) => {
-          let markerLatLng = {
-            lat: post.latitude,
-            lng: post.longitude
-          }
-
-          // marker
-          let marker = new google.maps.Marker({
-            position: markerLatLng,
-            map,
-            title: post.content,
-            label: {
-              text: "😊",
-              fontSize: "24px",
-            }
-          })
-          // info window
-          let infoWindow = new google.maps.InfoWindow({
-            position: markerLatLng,
-            content: `
-            <div class="infowin-content">
-              ${post.content}
-            </div>
-            <div class="infowin-date">
-              ${new Date(post.created_at).toDateString()}
-            </div>
-            `
-          })
-
-          infoWindow.open(map, marker);
-
-          marker.addListener("click", () => {
-            infoWindow.open(map, marker);
-          })
-        })
-      }).catch((err)=>{
-        console.log(err)
-      });
-
-      new google.maps.Marker({
-        position: latLng,
-        map,
-        title: "You",
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: "blue",
-          fillOpacity: 1,
-          // anchor: new google.maps.Point(100, 100),
-          strokeWeight: 3,
-          strokeColor: "white",
-          scale: 1.2,
-        },
-      })
-
-      mapNotice.innerHTML = "";
-
+      drawMap(currentLatLng, focusItem);
     });
+    mapNotice.innerHTML = "";
   }
 </script>
 <style>
