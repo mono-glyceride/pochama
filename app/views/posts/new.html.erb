@@ -34,28 +34,30 @@
     <%= form.hidden_field :emoji, id: "form-hidden-emoji", value: "" %>
   <% end %>
 </div>
-<script src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
+<script defer src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
 <script>
 
-  var hiddenEmoji = document.querySelector("#form-hidden-emoji");
-  var emoji = document.querySelector("#form-emoji");
-  var emojiPicker = document.querySelector("#emoji-picker");
-  emoji.addEventListener("click", (e) => {
-    emojiPicker.classList.toggle("show");
+  window.addEventListener("DOMContentLoaded", (e) => {
+    var hiddenEmoji = document.querySelector("#form-hidden-emoji");
+    var emoji = document.querySelector("#form-emoji");
+    var emojiPicker = document.querySelector("#emoji-picker");
+    emoji.addEventListener("click", (e) => {
+      emojiPicker.classList.toggle("show");
+    });
+
+    var picker = picmo.createPicker({rootElement : emojiPicker });
+    picker.addEventListener("emoji:select", e=> {
+      emoji.innerHTML = e.emoji;
+      hiddenEmoji.value = e.emoji;
+    })
+
+    document.body.addEventListener("click", (e)=>{
+      if(e.target.closest("#emoji-picker") || e.target.closest("#form-emoji")){
+        return;
+      }
+      emojiPicker.classList.remove("show");
+    })
   });
-
-  var picker = picmo.createPicker({rootElement : emojiPicker });
-  picker.addEventListener("emoji:select", e=> {
-    emoji.innerHTML = e.emoji;
-    hiddenEmoji.value = e.emoji;
-  })
-
-  document.body.addEventListener("click", (e)=>{
-    if(e.target.closest("#emoji-picker") || e.target.closest("#form-emoji")){
-      return;
-    }
-    emojiPicker.classList.remove("show");
-  })
 
   var coordsReady = false;
   var isValidMsg = false;
