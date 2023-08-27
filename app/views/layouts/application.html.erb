@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Myapp</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>通りすがりメモリー</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -11,15 +11,19 @@
       html, body {
         margin: 0;
         padding: 0;
-        font-family: sans-serif;
+        font-family: "Zen Maru Gothic", sans-serif;
       }
       :root {
         --primary: #ffa548;
         --primary-dark: #d79754;
+        --primary-light: #fff4e1;
         --white: #fff;
-        --light-gray: #dddddd;
+        --light-gray: #ededed;
       }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500&display=swap" rel="stylesheet">
   </head>
   <body>
     <script>

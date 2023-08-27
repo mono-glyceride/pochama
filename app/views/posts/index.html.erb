@@ -1,13 +1,13 @@
 <%= render "shared/header" %>
-<div class="timeline-address-wrapper">
-  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-    <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
-  </svg>
-  <p>東京都 港区 (北緯35.４度 東経139.7度)</p>
-</div>
 <div class="timeline">
-  <h1 class="timeline-heading">今いるところの投稿</h1>
+  <h1 class="timeline-heading">現在地周辺の投稿</h1>
+  <div class="timeline-address-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
+    </svg>
+    <div class="timeline-coords">京都府 中京区 (35.4, 139.7)</div>
+  </div>
   <div id="post-list">
   </div>
 </div>
@@ -71,11 +71,20 @@
               </div>` :
               ""
             }
-            <div class="post-content-coords">
-              <a href="/posts/map?id=${post.id}&lat=${post.latitude}&lng=${post.longitude}">
-                (${post.latitude}, ${post.longitude})
-              </a>
-            </div>
+            <a class="post-content-coords" href="<%= map_posts_path %>?id=${post.id}&lat=${post.latitude}&lng=${post.longitude}">
+              <div>
+                ${post.latitude}, ${post.longitude}
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-current-location" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+                <path d="M12 12m-8 0a8 8 0 1 0 16 0a8 8 0 1 0 -16 0"></path>
+                <path d="M12 2l0 2"></path>
+                <path d="M12 20l0 2"></path>
+                <path d="M20 12l2 0"></path>
+                <path d="M2 12l2 0"></path>
+              </svg>
+            </a>
           </div>
         `
         listContainer.appendChild(postElement)
@@ -105,8 +114,22 @@
     align-items: center;
     color: var(--primary);
     background: white;
-    padding: 0 16px;
+    padding: 6px 8px;
     z-index: 400;
+    border-radius: 8px;
+    background: #fff4e1;
+    width: 96%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    font-size: 14px;
+  }
+  
+  .timeline-address-wrapper svg {
+    width: 20px;
+    height: 20px;
+  }
+  .timeline-coords {
+    margin: 0;
   }
   .timeline-heading {
     font-size: 18px;
@@ -196,7 +219,17 @@
     font-size: 12px;
     color: gray;
     text-align: right;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
   }
+  .post-content-coords svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .loading .post-content-coords {
     background: #e6e6e6;
     border-radius: 6px;

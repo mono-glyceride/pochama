@@ -1,28 +1,41 @@
 <header>
-  <h1>通りすがりメモリー</h1>
+  <h1>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-planet" width="40" height="40" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M18.816 13.58c2.292 2.138 3.546 4 3.092 4.9c-.745 1.46 -5.783 -.259 -11.255 -3.838c-5.47 -3.579 -9.304 -7.664 -8.56 -9.123c.464 -.91 2.926 -.444 5.803 .805"></path>
+   <path d="M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+    </svg>
+    通りすがりメモリー
+  </h1>
 </header>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap" rel="stylesheet">
+
 <style>
   header {
+    display: grid;
+    position: sticky; 
+    top: 4px;
+    z-index: 900;
+    padding: 12px;
     background-color: var(--primary) ;
     color: white; 
     text-align: center; 
-    position: sticky; 
     font-size: 10px;
-    font-family: "Yuji Boku", sans-serif;
     border-radius: 999px;
-    padding: 12px;
     width: 96%;
+    margin: 0 auto 8px;
     box-sizing: border-box;
-    top: 4px;
-    margin: 4px auto;
-    z-index: 999;
+  }
+  header svg {
+    width: 26px;
+    height: 26px;
   }
   header h1 {
     margin: 0;
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 </style>

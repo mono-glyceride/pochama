@@ -1,5 +1,14 @@
 <%= render "shared/header" %>
-<div id="map" class="loading"></div>
+<div id="map" class="loading">
+  <div class="map-loading-message-container">
+    <svg class="map-loading-icon" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-planet" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M18.816 13.58c2.292 2.138 3.546 4 3.092 4.9c-.745 1.46 -5.783 -.259 -11.255 -3.838c-5.47 -3.579 -9.304 -7.664 -8.56 -9.123c.464 -.91 2.926 -.444 5.803 .805"></path>
+      <path d="M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+    </svg>
+    <div class="map-loading-text">Loading</div>
+  </div>
+</div>
 <%= render "shared/new_post_button" %>
 <%= render "shared/navbar", page: "map" %>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -41,7 +50,7 @@
           label: {
             text: post.emoji || "?",
             fontSize: "24px",
-          }
+          },
         })
 
         // info window
@@ -65,7 +74,7 @@
           infoWindow.open(map, marker);
         })
       })
-    }).catch((err)=>{
+    }).catch((err) => {
       console.log(err)
     });
 
@@ -105,11 +114,24 @@
 <style>
   #map {
     width: 100%;
-    height: calc(100vh - 40px - 73px);
+    height: calc(100vh - 61px - 73px);
   }
   #map.loading {
     animation: loading-anm 1s infinite;
     background: var(--light-gray);
+  }
+  .map-loading-message-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-loading-text::after {
+    content: "";
+    animation: loading-dots 2s infinite;
   }
   .infowin-content {
     font-size: 14px;
@@ -128,6 +150,21 @@
     }
     100% {
       opacity: 0.3;
+    }
+  }
+
+  @keyframes loading-dots {
+    0% {
+      content: "";
+    }
+    25% {
+      content: ".";
+    }
+    50% {
+      content: "..";
+    }
+    75% {
+      content: "...";
     }
   }
 </style>
