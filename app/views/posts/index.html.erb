@@ -46,6 +46,9 @@
             <div class="post-content-text">
               ${post.content}
             </div>
+            <div class="post-image-container">
+              <img class="post-content-image" src="https://picsum.photos/300/200" alt="image1" loading="lazy">
+            </div>
           </div>
         `
         listContainer.appendChild(postElement)
@@ -100,7 +103,7 @@
   .post-item-rhs {
     display: flex;
     flex-direction: column;
-    gap: 8px
+    gap: 12px
   }
   .post-item-header {
     display: flex;
@@ -115,10 +118,20 @@
     color: gray;
   }
   .post-content-text {
-    grid-row: 2;
-    grid-column: 2;
     font-size: 14px;
     line-height: 1.2;
+  }
+  .post-image-container {
+    max-width: 100%;
+    max-height: 152px;
+    box-sizing: border-box;
+    display: flex;
+  }
+  .post-content-image {
+    object-fit: contain;
+    border-radius: 8px;
+    max-height: 100%;
+    max-width: 100%;
   }
 
   @keyframes fadein-l2r {
