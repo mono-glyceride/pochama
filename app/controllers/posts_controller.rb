@@ -32,7 +32,7 @@ class PostsController < ApplicationController
   private
 
     def posts_params
-      params.require(:post).permit(:latitude, :longitude, :content)
+      params.require(:post).permit(:latitude, :longitude, :content,:image,:authenticity_token)
     end
 
 
