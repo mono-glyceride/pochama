@@ -39,7 +39,7 @@
           京都市・中京区
         </div>
         <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
-        <%= form.file_field :img_file_name, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
+        <%= form.file_field :img, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
@@ -273,16 +273,16 @@
     cursor: pointer;
   }
   .custom-file-label svg {
-    color: orange; 
-    width: 24px; 
-    height: 50px; 
+    color: orange;
+    width: 24px;
+    height: 50px;
   }
   .custom-file-input {
     display: none;
   }
   .custom-file-input:checked + .custom-file-label {
-    background-color: orange; 
-    color: white; 
+    background-color: orange;
+    color: white;
   }
 }
 #form-massage {
