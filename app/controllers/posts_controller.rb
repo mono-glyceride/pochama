@@ -9,6 +9,7 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(posts_params)
+    @post.img_file_name = @post.img.key
     if @post.save
       flash[:success] = '投稿しました'
       redirect_to root_path
@@ -32,7 +33,7 @@ class PostsController < ApplicationController
   private
 
     def posts_params
-      params.require(:post).permit(:latitude, :longitude, :content, :image, :emoji, :authenticity_token)
+      params.require(:post).permit(:latitude, :longitude, :content, :img, :emoji, :authenticity_token)
     end
 
 
