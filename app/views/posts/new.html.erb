@@ -2,7 +2,7 @@
 <div class="form-container">
   <%= form_with model: @post, data: {turbo: false } do |form| %>
     <div class="form-header">
-      <button id="form-cancel-button">キャンセル</button>
+      <div id="form-cancel-button">キャンセル</div>
       <span id="form-notice">位置情報を取得中...</span>
       <button id="form-submit-button" type="submit">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -65,7 +65,7 @@
   var cancelButton = document.querySelector("#form-cancel-button");
   cancelButton.addEventListener("click", (e) => {
     e.preventDefault();
-    window.history.back();
+    window.location.href = "<%= root_path %>";
   });
 
   var submitButton = document.querySelector("#form-submit-button");
@@ -134,6 +134,7 @@
     padding: 8px;
     border-radius: 12px;
     color: black;
+    font-size: 12px;
   }
   #form-cancel-button:hover {
     text-decoration: underline;
