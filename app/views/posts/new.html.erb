@@ -1,7 +1,6 @@
-<%= render  'shared/error_messages' %>
 <%= render "shared/header" %>
 <div class="form-container">
-  <%= form_with model: @post do |form| %>
+  <%= form_with model: @post, data: {turbo: false } do |form| %>
     <div class="form-header">
       <button id="form-cancel-button">キャンセル</button>
       <span id="form-notice">位置情報を取得中...</span>
@@ -16,7 +15,7 @@
     <div class="form-main">
       <div class="form-emoji-wrapper">
         <div id="emoji-picker"></div>
-        <div id="form-emoji">😊</div>
+        <div id="form-emoji"></div>
       </div>
       <div class="form-message-wrapper">
         <div class="form-user-address">
@@ -34,30 +33,31 @@
     <%= form.hidden_field :emoji, id: "form-hidden-emoji", value: "" %>
   <% end %>
 </div>
-<script defer src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
+<script src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
 <script>
 
-  window.addEventListener("DOMContentLoaded", (e) => {
-    var hiddenEmoji = document.querySelector("#form-hidden-emoji");
-    var emoji = document.querySelector("#form-emoji");
-    var emojiPicker = document.querySelector("#emoji-picker");
-    emoji.addEventListener("click", (e) => {
-      emojiPicker.classList.toggle("show");
-    });
+  var emoji = document.querySelector("#form-emoji");
+  var randEmo = randomEmoji();
+  emoji.innerHTML = randEmo;
+  document.querySelector("#form-hidden-emoji").value = randEmo;
 
-    var picker = picmo.createPicker({rootElement : emojiPicker });
-    picker.addEventListener("emoji:select", e=> {
-      emoji.innerHTML = e.emoji;
-      hiddenEmoji.value = e.emoji;
-    })
-
-    document.body.addEventListener("click", (e)=>{
-      if(e.target.closest("#emoji-picker") || e.target.closest("#form-emoji")){
-        return;
-      }
-      emojiPicker.classList.remove("show");
-    })
+  var emojiPicker = document.querySelector("#emoji-picker");
+  emoji.addEventListener("click", (e) => {
+    emojiPicker.classList.toggle("show");
   });
+
+  var picker = picmo.createPicker({rootElement : emojiPicker });
+  picker.addEventListener("emoji:select", (e) => {
+    emoji.innerHTML = e.emoji;
+    document.querySelector("#form-hidden-emoji").value = e.emoji;
+  })
+
+  document.body.addEventListener("click", (e)=>{
+    if(e.target.closest("#emoji-picker") || e.target.closest("#form-emoji")){
+      return;
+    }
+    emojiPicker.classList.remove("show");
+  })
 
   var coordsReady = false;
   var isValidMsg = false;
@@ -184,7 +184,7 @@
   }
   #emoji-picker {
     position: absolute;
-    top: 48px;
+    top: 58px;
     display: none;
   }
   #emoji-picker.show {

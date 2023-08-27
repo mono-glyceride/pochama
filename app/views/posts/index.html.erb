@@ -33,7 +33,7 @@
         postElement.style.animationDelay = `${0.1 * i}s`
         postElement.innerHTML = `
           <div class="post-content-emoji">
-            😊
+            ${post.emoji || "?"}
           </div>
           <div class="post-item-rhs">
             <div class="post-item-header">
