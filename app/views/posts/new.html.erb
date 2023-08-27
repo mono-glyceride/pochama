@@ -39,7 +39,7 @@
           京都市・中京区
         </div>
         <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
-        <%= form.file_field :img %>
+        <%= form.file_field :img, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
