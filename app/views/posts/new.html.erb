@@ -39,12 +39,12 @@
           京都市・中京区
         </div>
         <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
-        <%= form.file_field :img_file_name, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
     <%= form.hidden_field :latitude, id: "form-latitude", value: "" %>
     <%= form.hidden_field :emoji, id: "form-hidden-emoji", value: "" %>
+    <%= form.file_field :img_file_name, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
   <% end %>
 </div>
 <script src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
