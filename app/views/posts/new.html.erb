@@ -27,11 +27,22 @@
           京都市・中京区
         </div>
         <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
+        <%= form.file_field :img_file_name %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
     <%= form.hidden_field :latitude, id: "form-latitude", value: "" %>
   <% end %>
+  <input type="file" id="file-input" accept="image/*" style="display: none;">
+  <label for="file-input" id="upload-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-camera-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+   <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+   <path d="M12 20h-7a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v3.5"></path>
+   <path d="M16 19h6"></path>
+   <path d="M19 16v6"></path>
+   <path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+</svg>
+  </label>  
 </div>
 <script>
   var coordsReady = false;
@@ -205,4 +216,11 @@
       transform: rotateY(360deg);
     }
   }
+  #upload-icon {
+    cursor: pointer;
+    background-color: white;
+    color: #ffcc99;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }  
 </style>
