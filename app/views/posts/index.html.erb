@@ -12,10 +12,31 @@
   </div>
 </div>
 <%= render "shared/new_post_button" %>
-<%= render "shared/navbar" %>
+<%= render "shared/navbar", page: "list" %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.5/viewer.min.js" integrity="sha512-RiULFIt4KC3x9TYgFfcbkYLtn0DHffAZ5S7hVxjLpdC3i0/hNt6zYSTomh4kH8u8Ue70n2HFeP4n0ehHUSH4bg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
   var listContainer = document.querySelector("#post-list");
+
+  for(let i=0;i<5;i++){
+    var postElement = document.createElement("div")
+        postElement.classList.add("post-item")
+        postElement.classList.add("loading")
+        postElement.style.animationDelay = `${0.1 * i}s`
+        postElement.innerHTML = `
+          <div class="post-content-emoji"></div>
+          <div class="post-item-rhs">
+            <div class="post-item-header">
+              <div class="post-content-date"></div>
+            </div>
+            <div class="post-content-text"></div>
+            <div class="post-content-coords">
+              <div></div>
+            </div>
+          </div>
+        `
+        listContainer.appendChild(postElement)
+  }
 
   navigator.geolocation.getCurrentPosition((position) => {
     axios.get(`/posts/search`,{
@@ -26,20 +47,35 @@
     }).then((res)=>{
       console.log(res.data);
       listContainer.innerHTML = "";
-      res.data.reverse().forEach(function(post) {
+      res.data.reverse().forEach((post, i) => {
         var postElement = document.createElement("div")
         postElement.classList.add("post-item")
+        postElement.style.animationDelay = `${0.1 * i}s`
         postElement.innerHTML = `
-          <div class="post-item-header">
-            <div class="post-content-date">
-              ${new Date(post.created_at).toLocaleString()}
-            </div>
-            <div class="post-content-coords">
-              (${post.latitude}, ${post.longitude})
-            </div>
+          <div class="post-content-emoji">
+            ${post.emoji || "?"}
           </div>
-          <div class="post-content-text">
-            ${post.content}
+          <div class="post-item-rhs">
+            <div class="post-item-header">
+              <div class="post-content-date">
+                ${new Date(post.created_at).toLocaleString()}
+              </div>
+            </div>
+            <div class="post-content-text">
+              ${post.content}
+            </div>
+            ${
+              post.image_url ?
+              `<div onClick="viewImage('post-image-${i}')" class="post-image-container">
+                <img id="post-image-${i}" class="post-content-image" src="https://picsum.photos/300/200" alt="image1" loading="lazy">
+              </div>` :
+              ""
+            }
+            <div class="post-content-coords">
+              <a href="/posts/map?id=${post.id}&lat=${post.latitude}&lng=${post.longitude}">
+                (${post.latitude}, ${post.longitude})
+              </a>
+            </div>
           </div>
         `
         listContainer.appendChild(postElement)
@@ -49,9 +85,18 @@
       listContainer.innerHTML = `<div class="post-list-notice">周辺の投稿を取得できませんでした T_T</div>`
     });
   });
+
+  function viewImage(id) {
+    console.log(id);
+    var viewer = new Viewer(document.getElementById(id), {
+      inline: false,
+      viewed() {
+        viewer.zoomTo(1)
+      }
+    });
+  }
 </script>
 <style>
-
   .timeline-address-wrapper {
     position: sticky;
     top: 0;
@@ -61,13 +106,13 @@
     color: var(--primary);
     background: white;
     padding: 0 16px;
+    z-index: 400;
   }
   .timeline-heading {
     font-size: 18px;
     padding-left: 16px;
   }
   #post-list {
-    background: #f4f4f4;
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -80,25 +125,108 @@
   }
   .post-item {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 16px;
     padding: 28px 24px;
     background-color: white;
+    opacity: 0;
+  }
+  .post-item + .post-item {
+    border-top: 1px solid #efefef;
+  }
+  .post-item:not(.loading) {
+    animation: fadein-l2r 0.8s cubic-bezier(0, 0.75, 0.19, 1.69) forwards;
+  }
+  .post-item.loading {
+    animation: loading-anm 1s infinite;
+  }
+  .post-content-emoji {
+    font-size: 32px;
+  }
+  .loading .post-content-emoji {
+    width: 40px;
+    height: 40px;
+    background: #e6e6e6;
+    border-radius: 100%;
+  }
+  .post-item-rhs {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    gap: 12px
   }
   .post-item-header {
     display: flex;
     gap: 8px;
   }
   .post-content-date {
-    font-size: 14px;
+    font-size: 12px;
     color: gray;
   }
-  .post-content-coords {
-    font-size: 14px;
-    color: gray;
+  .loading .post-content-date {
+    background: #e6e6e6;
+    border-radius: 8px;
+    height: 16px;
+    width: 100px;
   }
   .post-content-text {
-    font-size: 1rem;
+    font-size: 14px;
     line-height: 1.2;
   }
+  .loading .post-content-text {
+    background: #e6e6e6;
+    border-radius: 8px;
+    height: 20px;
+    width: 200px;
+  }
+  .post-image-container {
+    max-width: 100%;
+    max-height: 152px;
+    box-sizing: border-box;
+    display: flex;
+    cursor: pointer;
+  }
+  .post-content-image {
+    object-fit: contain;
+    border-radius: 8px;
+    max-height: 100%;
+    max-width: 100%;
+  }
+  .post-content-coords {
+    width: 100%;
+    font-size: 12px;
+    color: gray;
+    text-align: right;
+  }
+  .loading .post-content-coords {
+    background: #e6e6e6;
+    border-radius: 6px;
+    height: 12px;
+    width: 140px;
+    align-self: flex-end;
+  }
+
+  @keyframes fadein-l2r {
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes loading-anm {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.5/viewer.min.css" integrity="sha512-VysXDwG8m5Ngy43+b8+CdTe6Qkc69z8Oyxgo3yg8JqhRwwtjfSs+M4NEaP4As6l0ZCX+RpTyyuSiJnnO8JS5Eg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
