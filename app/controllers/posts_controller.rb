@@ -9,6 +9,7 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(posts_params)
+    @post.img_file_name = @post.img.key
     if @post.save
       flash[:success] = '投稿しました'
       redirect_to root_path
@@ -22,17 +23,22 @@ class PostsController < ApplicationController
   end
 
   def search
-    current_lat = posts_paramas[:latitude].to_f
-    current_lng = posts_paramas[:longitude].to_f
+    current_lat = search_params[:latitude].to_f
+    current_lng = search_params[:longitude].to_f
     @posts = Post.where( latitude:(current_lat - 0.009)..(current_lat + 0.009), longitude:(current_lng - 0.009)..(current_lng + 0.009) )
-  
+
     render json: @posts
   end
-  
+
   private
-    def posts_paramas
-      params.permit(:latitude, :longitude)
+
+    def posts_params
+      params.require(:post).permit(:latitude, :longitude, :content, :img, :emoji, :authenticity_token)
     end
 
+
+    def search_params
+      params.permit(:latitude, :longitude)
+    end
 
 end
