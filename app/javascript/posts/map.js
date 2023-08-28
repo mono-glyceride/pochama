@@ -45,12 +45,19 @@ async function drawMap(currentLatLng, focusItem) {
         let infoWindow = new google.maps.InfoWindow({
           position: markerLatLng,
           content: `
-        <div class="infowin-content">
-          ${post.content}
-        </div>
-        <div class="infowin-date">
-          ${new Date(post.created_at).toDateString()}
-        </div>
+          <div class="infowin-container">
+            <div class="infowin-content-emoji">
+              ${post.emoji || "?"}
+            </div>
+            <div class="infowin-rhs">
+              <div class="infowin-content-text">
+              ${post.content}
+              </div>
+              <div class="infowin-content-date">
+              ${new Date(post.created_at).toDateString()}
+              </div>
+            </div>
+          </div>
         `,
         });
 
