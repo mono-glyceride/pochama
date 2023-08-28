@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  has_one_attached :image
+  has_one_attached :img
 
   validates :content, presence: true, length: { maximum: 200 }
   validates :latitude, numericality: { in: 0..90 }
