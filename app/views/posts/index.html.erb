@@ -9,7 +9,7 @@
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
       <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
     </svg>
-    <div class="timeline-coords">京都府 中京区 (35.4, 139.7)</div>
+    <div class="timeline-coords"> 京都府 中京区 </div>
   </div>
   <div id="post-list">
   </div>
@@ -29,9 +29,9 @@
     z-index: 400;
     border-radius: 8px;
     background: #fff4e1;
-    width: 96%;
+    width: fit-content;
+    margin-left: 16px;
     box-sizing: border-box;
-    margin: 0 auto;
     font-size: 14px;
   }
   
@@ -44,7 +44,7 @@
   }
   .timeline-heading {
     font-size: 18px;
-    padding-left: 16px;
+    padding: 16px;
   }
   #post-list {
     display: flex;
@@ -95,6 +95,7 @@
   .post-content-date {
     font-size: 12px;
     color: gray;
+    font-family: monospace;
   }
   .loading .post-content-date {
     background: #e6e6e6;
@@ -127,7 +128,7 @@
   }
   .post-content-coords {
     width: 100%;
-    font-size: 12px;
+    font-size: 10px;
     color: gray;
     text-align: right;
     text-decoration: none;
@@ -135,6 +136,7 @@
     align-items: center;
     gap: 6px;
     justify-content: flex-end;
+    font-family: monospace;
   }
   .post-content-coords svg {
     width: 16px;
