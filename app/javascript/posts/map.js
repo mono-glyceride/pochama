@@ -53,6 +53,13 @@ async function drawMap(currentLatLng, focusItem) {
               <div class="infowin-content-text">
               ${post.content}
               </div>
+              ${
+                post.img_file_name
+                  ? `<div class="infowin-image-container">
+                      <img class="infowin-content-image" src="https://pochama.s3.amazonaws.com/${post.img_file_name}" />
+                    </div>`
+                  : ""
+              }
               <div class="infowin-content-date">
               ${new Date(post.created_at).toDateString()}
               </div>
