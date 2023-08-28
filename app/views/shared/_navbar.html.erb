@@ -1,5 +1,5 @@
 <nav class="navbar-container">
-  <%= link_to root_path do %>
+  <%= link_to root_path, data: {turbo: false} do %>
     <div class="navbar-navitem <%= "active" if defined?(page) && page == "list" %>">
       <svg xmlns="http://www.w3.org/2000/svg" class="navbar-icon" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -10,17 +10,17 @@
         <path d="M8 12v.01"></path>
         <path d="M11 18v.01"></path>
       </svg>
-      List
+      リスト
     </div>
   <% end %>
-  <%= link_to map_posts_path do %>
+  <%= link_to map_posts_path, data: {turbo: false } do %>
     <div class="navbar-navitem <%= "active" if defined?(page) && page == "map" %>">
       <svg xmlns="http://www.w3.org/2000/svg" class="navbar-icon" width="40" height="40" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
         <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
         <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
       </svg>
-      Map
+      マップ
     </div>
   <% end %>
 </nav>
@@ -46,7 +46,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     transition: 0.2s;
     color: gray;

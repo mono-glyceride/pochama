@@ -1,4 +1,6 @@
-<%= render "shared/header" %>
+ <% content_for :js do %>
+   <%= javascript_import_module_tag "posts/new" %>
+ <% end %>
 <div class="form-container">
   <%= form_with model: @post, data: {turbo: false } do |form| %>
     <div class="form-header">
@@ -36,89 +38,18 @@
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
           </svg>
-          京都市・中京区
+          京都府・中京区
         </div>
-        <%= form.text_area :content, placeholder: "\"今いる場所\" でのできごとを共有しよう。", id: "form-message" %>
+        <%= form.text_area :content, placeholder: "\"通りすがり\"の思い出を共有しよう。", id: "form-message" %>
         <%= form.file_field :img, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
       </div>
     </div>
     <%= form.hidden_field :longitude, id: "form-longitude", value: "" %>
     <%= form.hidden_field :latitude, id: "form-latitude", value: "" %>
     <%= form.hidden_field :emoji, id: "form-hidden-emoji", value: "" %>
+    <%= form.file_field :img_file_name, class: 'custom-file-input', id: 'customFileInput', accept: 'image/*', style: 'display: none;' %>
   <% end %>
 </div>
-<script src="https://unpkg.com/picmo@latest/dist/umd/index.js"></script>
-<script>
-
-  var emoji = document.querySelector("#form-emoji");
-  var randEmo = randomEmoji();
-  emoji.innerHTML = randEmo;
-  document.querySelector("#form-hidden-emoji").value = randEmo;
-
-  emoji.addEventListener("click", (e) => {
-    var emojiPicker = document.querySelector("#emoji-picker");
-    emojiPicker.classList.toggle("show");
-
-    var picker = picmo.createPicker({rootElement : emojiPicker });
-    picker.addEventListener("emoji:select", (e) => {
-      emoji.innerHTML = e.emoji;
-      document.querySelector("#form-hidden-emoji").value = e.emoji;
-    })
-  });
-
-  document.body.addEventListener("click", (e)=>{
-    if(e.target.closest("#emoji-picker") || e.target.closest("#form-emoji")){
-      return;
-    }
-    document.querySelector("#emoji-picker").classList.remove("show");
-  })
-
-  var coordsReady = false;
-  var isValidMsg = false;
-
-  var cancelButton = document.querySelector("#form-cancel-button");
-  cancelButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    window.location.href = "<%= root_path %>";
-  });
-
-  var submitButton = document.querySelector("#form-submit-button");
-  submitButton.disabled = true;
-  submitButton.value = ``
-
-  var noticeMsg = document.querySelector("#form-notice");
-
-  navigator.geolocation.getCurrentPosition((position) => {
-    document.querySelector("#form-longitude").value = position.coords.longitude;
-    document.querySelector("#form-latitude").value = position.coords.latitude;
-
-    submitButton.disabled = false;
-    noticeMsg.innerHTML = "";
-
-    coordsReady = true;
-
-    if (isValidMsg) {
-      submitButton.disabled = false;
-    } else {
-      submitButton.disabled = true;
-    }
-  });
-
-  var msgInput = document.querySelector("#form-message");
-  msgInput.addEventListener("input", (e) => {
-    var msg = e.target.value;
-    if (msg.length > 0) {
-      isValidMsg = true;
-    } else {
-      isValidMsg = false;
-    }
-    if (isValidMsg && coordsReady) {
-      submitButton.disabled = false;
-    } else {
-      submitButton.disabled = true;
-    }
-  });
-</script>
 <style>
   .form-container {
     padding: 16px;

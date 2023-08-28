@@ -1,116 +1,50 @@
+ <% content_for :js do %>
+   <%= javascript_import_module_tag "posts/index" %>
+ <% end %>
 <%= render "shared/header" %>
-<div class="timeline-address-wrapper">
-  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-    <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
-  </svg>
-  <p>東京都 港区 (北緯35.４度 東経139.7度)</p>
-</div>
 <div class="timeline">
-  <h1 class="timeline-heading">今いるところの投稿</h1>
+  <h1 class="timeline-heading">現在地周辺の投稿</h1>
+  <div class="timeline-address-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="none" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M18.364 4.636a9 9 0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
+    </svg>
+    <div class="timeline-coords"> 京都府 中京区 </div>
+  </div>
   <div id="post-list">
   </div>
 </div>
 <%= render "shared/new_post_button" %>
 <%= render "shared/navbar", page: "list" %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.5/viewer.min.js" integrity="sha512-RiULFIt4KC3x9TYgFfcbkYLtn0DHffAZ5S7hVxjLpdC3i0/hNt6zYSTomh4kH8u8Ue70n2HFeP4n0ehHUSH4bg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-  var listContainer = document.querySelector("#post-list");
-
-  for(let i=0;i<5;i++){
-    var postElement = document.createElement("div")
-        postElement.classList.add("post-item")
-        postElement.classList.add("loading")
-        postElement.style.animationDelay = `${0.1 * i}s`
-        postElement.innerHTML = `
-          <div class="post-content-emoji"></div>
-          <div class="post-item-rhs">
-            <div class="post-item-header">
-              <div class="post-content-date"></div>
-            </div>
-            <div class="post-content-text"></div>
-            <div class="post-content-coords">
-              <div></div>
-            </div>
-          </div>
-        `
-        listContainer.appendChild(postElement)
-  }
-
-  navigator.geolocation.getCurrentPosition((position) => {
-    axios.get(`/posts/search`,{
-      params: {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      }
-    }).then((res)=>{
-      console.log(res.data);
-      listContainer.innerHTML = "";
-      res.data.reverse().forEach((post, i) => {
-        var postElement = document.createElement("div")
-        postElement.classList.add("post-item")
-        postElement.style.animationDelay = `${0.1 * i}s`
-        postElement.innerHTML = `
-          <div class="post-content-emoji">
-            ${post.emoji || "?"}
-          </div>
-          <div class="post-item-rhs">
-            <div class="post-item-header">
-              <div class="post-content-date">
-                ${new Date(post.created_at).toLocaleString()}
-              </div>
-            </div>
-            <div class="post-content-text">
-              ${post.content}
-            </div>
-            ${
-              post.img_file_name ?
-              `<div onClick="viewImage('post-image-${i}')" class="post-image-container">
-                <img id="post-image-${i}" class="post-content-image" src="https://pochama.s3.amazonaws.com/${post.img_file_name}" alt="image" loading="lazy">
-              </div>` :
-              ""
-            }
-            <div class="post-content-coords">
-              <a href="/posts/map?id=${post.id}&lat=${post.latitude}&lng=${post.longitude}">
-                (${post.latitude}, ${post.longitude})
-              </a>
-            </div>
-          </div>
-        `
-        listContainer.appendChild(postElement)
-      })
-    }).catch((err)=>{
-      console.log(err)
-      listContainer.innerHTML = `<div class="post-list-notice">周辺の投稿を取得できませんでした T_T</div>`
-    });
-  });
-
-  function viewImage(id) {
-    console.log(id);
-    var viewer = new Viewer(document.getElementById(id), {
-      inline: false,
-      viewed() {
-        viewer.zoomTo(1)
-      }
-    });
-  }
-</script>
 <style>
   .timeline-address-wrapper {
     position: sticky;
-    top: 0;
+    top: 60px;
     display: flex;
     gap: 8px;
     align-items: center;
     color: var(--primary);
     background: white;
-    padding: 0 16px;
+    padding: 6px 8px;
     z-index: 400;
+    border-radius: 8px;
+    background: #fff4e1;
+    width: fit-content;
+    margin-left: 16px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  .timeline-address-wrapper svg {
+    width: 20px;
+    height: 20px;
+  }
+  .timeline-coords {
+    margin: 0;
   }
   .timeline-heading {
     font-size: 18px;
-    padding-left: 16px;
+    padding: 16px;
   }
   #post-list {
     display: flex;
@@ -161,6 +95,7 @@
   .post-content-date {
     font-size: 12px;
     color: gray;
+    font-family: monospace;
   }
   .loading .post-content-date {
     background: #e6e6e6;
@@ -193,10 +128,21 @@
   }
   .post-content-coords {
     width: 100%;
-    font-size: 12px;
+    font-size: 10px;
     color: gray;
     text-align: right;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    font-family: monospace;
   }
+  .post-content-coords svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .loading .post-content-coords {
     background: #e6e6e6;
     border-radius: 6px;

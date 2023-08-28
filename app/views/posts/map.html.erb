@@ -1,119 +1,92 @@
 <%= render "shared/header" %>
-<div id="map-notice">マップを読み込んでいます...</div>
-<div id="map"></div>
+<div id="map" class="loading">
+  <div class="map-loading-message-container">
+    <svg class="map-loading-icon" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-planet" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+      <path d="M18.816 13.58c2.292 2.138 3.546 4 3.092 4.9c-.745 1.46 -5.783 -.259 -11.255 -3.838c-5.47 -3.579 -9.304 -7.664 -8.56 -9.123c.464 -.91 2.926 -.444 5.803 .805"></path>
+      <path d="M12 12m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+    </svg>
+    <div class="map-loading-text">Loading</div>
+  </div>
+</div>
 <%= render "shared/new_post_button" %>
 <%= render "shared/navbar", page: "map" %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_API_KEY'] %>&callback=initMap"
-  async
-  defer
-></script>
+<% content_for :js do %>
+  <%= javascript_import_module_tag "posts/map" %>
+<% end %>
+
 <script>
-  var mapNotice =  document.querySelector("#map-notice");
-
-  let map;
-
-  function drawMap(currentLatLng, focusItem){
-    map = new google.maps.Map(document.querySelector("#map"), {
-      center: focusItem ? focusItem.latLng : currentLatLng,
-      zoom: focusItem ? 20 : 15,
-    })
-
-    // get posts
-    axios.get(`/posts/search`,{
-      params: {
-        latitude: focusItem ? focusItem.latLng.lat : currentLatLng.lat,
-        longitude: focusItem ? focusItem.latLng.lng : currentLatLng.lng,
-      }
-    }).then((res)=>{
-      console.log(res.data);
-
-      // draw markers
-      res.data.forEach((post) => {
-        let markerLatLng = {
-          lat: post.latitude,
-          lng: post.longitude
-        }
-
-        // marker
-        let marker = new google.maps.Marker({
-          position: markerLatLng,
-          map,
-          title: post.content,
-          label: {
-            text: post.emoji || "?",
-            fontSize: "24px",
-          }
-        })
-
-        // info window
-        let infoWindow = new google.maps.InfoWindow({
-          position: markerLatLng,
-          content: `
-          <div class="infowin-content">
-            ${post.content}
-          </div>
-          <div class="infowin-date">
-            ${new Date(post.created_at).toDateString()}
-          </div>
-          `
-        })
-
-        if(!focusItem || (focusItem && post.id === focusItem.id)){
-          infoWindow.open(map, marker);
-        } 
-
-        marker.addListener("click", () => {
-          infoWindow.open(map, marker);
-        })
-      })
-    }).catch((err)=>{
-      console.log(err)
-    });
-
-    new google.maps.Marker({
-      position: currentLatLng,
-      map,
-      title: "You",
-    })
-  }
-
-  async function initMap() {
-    let params = new URLSearchParams(window.location.search);
-
-    await navigator.geolocation.getCurrentPosition((pos) => {
-      let currentLatLng = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude
-      }
-      let focusItem = null;
-
-      if (params.get("lat") !== null && params.get("lng") !== null) {
-        focusItem = {
-          latLng: {
-            lat: parseFloat(params.get("lat")),
-            lng: parseFloat(params.get("lng"))
-          },
-          id: parseInt(params.get("id"))
-        }
-      }
-
-      drawMap(currentLatLng, focusItem);
-    });
-    mapNotice.innerHTML = "";
-  }
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+    key: "<%= ENV['GOOGLE_API_KEY'] %>",
+    v: "weekly",
+  });
 </script>
 <style>
   #map {
     width: 100%;
-    height: calc(100vh - 40px - 73px);
+    height: calc(100vh - 61px - 73px);
   }
-  .infowin-content {
+  #map.loading {
+    animation: loading-anm 1s infinite;
+    background: var(--light-gray);
+  }
+  .map-loading-message-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-loading-text::after {
+    content: "";
+    animation: loading-dots 2s infinite;
+  }
+  .infowin-container {
+    display: flex;
+    gap: 12px
+  }
+  .infowin-rhs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .infowin-content-emoji {
+    font-size: 30px;
+  }
+  .infowin-content-text {
     font-size: 14px;
   }
-  .infowin-date {
+  .infowin-content-date {
     color: gray;
     font-size: 12px;
+  }
+
+  @keyframes loading-anm {
+    0% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes loading-dots {
+    0% {
+      content: "";
+    }
+    25% {
+      content: ".";
+    }
+    50% {
+      content: "..";
+    }
+    75% {
+      content: "...";
+    }
   }
 </style>
