@@ -11,105 +11,17 @@
 </div>
 <%= render "shared/new_post_button" %>
 <%= render "shared/navbar", page: "map" %>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['GOOGLE_API_KEY'] %>&callback=initMap"
-  async
-  defer
-></script>
+<% content_for :js do %>
+  <%= javascript_import_module_tag "posts/map" %>
+<% end %>
+
 <script>
-  let map;
-
-  function drawMap(currentLatLng, focusItem){
-    map = new google.maps.Map(document.querySelector("#map"), {
-      center: focusItem ? focusItem.latLng : currentLatLng,
-      zoom: focusItem ? 20 : 15,
-    })
-
-    // get posts
-    axios.get(`/posts/search`,{
-      params: {
-        latitude: focusItem ? focusItem.latLng.lat : currentLatLng.lat,
-        longitude: focusItem ? focusItem.latLng.lng : currentLatLng.lng,
-      }
-    }).then((res)=>{
-      console.log(res.data);
-
-      // draw markers
-      res.data.forEach((post) => {
-        let markerLatLng = {
-          lat: post.latitude,
-          lng: post.longitude
-        }
-
-        // marker
-        let marker = new google.maps.Marker({
-          position: markerLatLng,
-          map,
-          title: post.content,
-          label: {
-            text: post.emoji || "?",
-            fontSize: "24px",
-          },
-        })
-
-        // info window
-        let infoWindow = new google.maps.InfoWindow({
-          position: markerLatLng,
-          content: `
-          <div class="infowin-content">
-            ${post.content}
-          </div>
-          <div class="infowin-date">
-            ${new Date(post.created_at).toDateString()}
-          </div>
-          `
-        })
-
-        if(!focusItem || (focusItem && post.id === focusItem.id)){
-          infoWindow.open(map, marker);
-        } 
-
-        marker.addListener("click", () => {
-          infoWindow.open(map, marker);
-        })
-      })
-    }).catch((err) => {
-      console.log(err)
-    });
-
-    new google.maps.Marker({
-      position: currentLatLng,
-      map,
-      title: "You",
-    })
-
-    document.querySelector("#map").classList.remove("loading");
-  }
-
-  async function initMap() {
-    let params = new URLSearchParams(window.location.search);
-
-    await navigator.geolocation.getCurrentPosition((pos) => {
-      let currentLatLng = {
-        lat: pos.coords.latitude,
-        lng: pos.coords.longitude
-      }
-      let focusItem = null;
-
-      if (params.get("lat") !== null && params.get("lng") !== null) {
-        focusItem = {
-          latLng: {
-            lat: parseFloat(params.get("lat")),
-            lng: parseFloat(params.get("lng"))
-          },
-          id: parseInt(params.get("id"))
-        }
-      }
-
-      drawMap(currentLatLng, focusItem);
-    });
-  }
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+    key: "<%= ENV['GOOGLE_API_KEY'] %>",
+    v: "weekly",
+    // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+    // Add other bootstrap parameters as needed, using camel case.
+  });
 </script>
 <style>
   #map {
